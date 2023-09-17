@@ -1,0 +1,85 @@
+import 'package:english_words/english_words.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (context) => MyAppState(),
+      child: MaterialApp(
+        title: 'Namer App',
+        theme: ThemeData(
+          useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
+        ),
+        home: MyHomePage(),
+      ),
+    );
+  }
+}
+
+class MyAppState extends ChangeNotifier {
+  var current = WordPair.random();
+  var curren = WordPair.random();
+  void getNext() {
+    current = WordPair.random();
+    curren = WordPair.random();
+    notifyListeners();
+  }
+}
+var favorites = <WordPair>[];
+
+class MyHomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    var appState = context.watch<MyAppState>();
+    var pair = appState.current;                 // ← Add this.
+
+    return Scaffold(
+
+      body: Center(
+        child: Column(
+          children: [
+            Text('A random idea:'),
+            BigCard(pair: pair),
+            Text(pair.asLowerCase),
+
+            Row(
+              children: [
+                ElevatedButton(
+        onPressed: () {
+          print('button pressed!');
+
+          appState.getNext();  // ← This instead of print().
+    },
+
+        child: Text('Next'),
+      ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+class BigCard extends StatelessWidget {
+  const BigCard({
+    super.key,
+    required this.pair,
+  });
+
+  final WordPair pair;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text("Hello");
+  }
+}
